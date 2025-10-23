@@ -6,11 +6,14 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Button } from "../ui/button";
+import { signIn } from "@/lib/auth-client";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 
 const loginSchema = z.object({
-    email:z.string().email("Please enter the email"),
+    email:z.email("Please enter the email"),
     password:z.string().min(6,"password must be at least")
 })
 
@@ -24,7 +27,7 @@ type LoginFormvalues = z.infer<typeof loginSchema>
 function LoginForm() {
 
     const [isLoading,setIsLoading] = useState(false);
-   
+   const router = useRouter()
 
 const form = useForm<LoginFormvalues>({
     resolver : zodResolver(loginSchema),
@@ -39,11 +42,24 @@ const form = useForm<LoginFormvalues>({
     setIsLoading(true);
 
     try{
-        console.log(value);
-        setIsLoading(false)
+        const {error} = await signIn.email({
+            email:value.email,
+            password:value.password,
+            rememberMe : true
+        }) 
+        if(error){
+            toast("login failed")
+            return 
+        }
+        toast("login successful")
+        router.push('/')
+
+        
     }catch(error){
         console.log(error);
         
+    }finally{
+        setIsLoading(false)
     }
    }
 

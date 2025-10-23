@@ -4,10 +4,12 @@ import { cn } from "@/lib/utils"
 import Link from "next/link"
 import { Button } from "../ui/button"
 import { useRouter } from "next/navigation"
+import { useSession } from "@/lib/auth-client";
+import UserMenu from "../auth/user-menu";
 
 
 function Header(){
-    
+    const {data:session, isPending} = useSession()
     const router = useRouter()
 
 
@@ -44,9 +46,20 @@ function Header(){
                  <div className="hidden md:block" >
                        
                         <div className="flex items-center gap-2" >
-                            <Button  onClick={()=>router.push('/auth')}  >
-                                Login
-                            </Button>
+                            {
+                                isPending? null:
+                                session?.user?(
+                                    <UserMenu user={session?.user}/>
+                                ):(
+                                    <Button
+                                    className="cursor-pointer"
+                                    onClick={()=>router.push("/auth")}
+                                    >
+                                    login
+                                    </Button>
+                                )
+                            
+                            }
                         </div>
                        
                  </div>
