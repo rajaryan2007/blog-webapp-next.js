@@ -1,10 +1,11 @@
 'use client'
 
 import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { Button } from "../ui/button";
 
 
 
@@ -34,8 +35,20 @@ const form = useForm<LoginFormvalues>({
 
 })
 
+   const onSubmit = async(value:LoginFormvalues)=>{
+    setIsLoading(true);
+
+    try{
+        console.log(value);
+        setIsLoading(false)
+    }catch(error){
+        console.log(error);
+        
+    }
+   }
+
     return <Form {...form} >
-         <form className="space-y-4">
+         <form  onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
             control={form.control}
             name="email"
@@ -45,6 +58,7 @@ const form = useForm<LoginFormvalues>({
                     <FormControl>
                         <input className="rounded-xl p-2" placeholder="Enter your email" {...field} />
                     </FormControl>
+                    <FormMessage/>
                 </FormItem>
             )}    
             />
@@ -57,10 +71,15 @@ const form = useForm<LoginFormvalues>({
                     <FormControl>
                         <input className="rounded-xl p-2" placeholder="Enter your password" type="password" {...field} />
                     </FormControl>
+                    <FormMessage/>
                 </FormItem>
             )}    
             />
-            
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                  {
+                    isLoading ? "signing":"sign"
+                  }
+           </Button>
 
 
          </form>
