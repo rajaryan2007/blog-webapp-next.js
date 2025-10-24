@@ -93,7 +93,7 @@ function RegisterForm({onSuccess}:RegisterFormProps) {
             <FormItem>
                  <FormLabel>email</FormLabel>
                  <FormControl>
-                    <input type="email" placeholder="Enter your email!" {...field} />
+                    <input type="email" className="input-style" placeholder="Enter your email!" {...field} />
                  </FormControl>
                  <FormMessage/>
             </FormItem>
@@ -106,7 +106,7 @@ function RegisterForm({onSuccess}:RegisterFormProps) {
             <FormItem>
                  <FormLabel>password</FormLabel>
                  <FormControl>
-                    <input type="password" placeholder="Enter your password!" {...field} />
+                    <input type="password" className="input-style" placeholder="Enter your password!" {...field} />
                  </FormControl>
                  <FormMessage/>
             </FormItem>
@@ -119,7 +119,7 @@ function RegisterForm({onSuccess}:RegisterFormProps) {
             <FormItem>
                  <FormLabel>confirm password</FormLabel>
                  <FormControl>
-                    <input type="password" placeholder="Enter your conform password!" {...field} />
+                    <input type="password" className="input-style" placeholder="Enter your conform password!" {...field} />
                  </FormControl>
                  <FormMessage/>
             </FormItem>

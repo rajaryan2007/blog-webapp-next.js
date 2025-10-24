@@ -72,7 +72,9 @@ const form = useForm<LoginFormvalues>({
                 <FormItem>
                     <FormLabel>Email </FormLabel>
                     <FormControl>
-                        <input className="rounded-xl p-2" placeholder="Enter your email" {...field} />
+                        <input 
+                        className="input-style"
+                        placeholder="Enter your email" {...field} />
                     </FormControl>
                     <FormMessage/>
                 </FormItem>
@@ -85,7 +87,7 @@ const form = useForm<LoginFormvalues>({
                 <FormItem>
                     <FormLabel>password </FormLabel>
                     <FormControl>
-                        <input className="rounded-xl p-2" placeholder="Enter your password" type="password" {...field} />
+                        <input  className="input-style" placeholder="Enter your password" type="password" {...field} />
                     </FormControl>
                     <FormMessage/>
                 </FormItem>
