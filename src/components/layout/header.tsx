@@ -41,7 +41,7 @@ function Header() {
         </div>
 
         {/* Right side */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="  items-center gap-4">
           <ThemeToggle />
           {!isPending && (
             session?.user ? (

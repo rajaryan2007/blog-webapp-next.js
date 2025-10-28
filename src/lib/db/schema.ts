@@ -47,6 +47,7 @@ export const posts = pgTable('posts', {
     id: serial('id').primaryKey(),
     title: varchar("title", { length: 255 }).notNull(),
     slug: varchar('slug', { length: 255 }).notNull().unique(),
+    description: text('description').notNull(), 
     content: text('content').notNull(),
     authorId: varchar("author_id", { length: 255 }).references(() => users.id)
         .notNull(),

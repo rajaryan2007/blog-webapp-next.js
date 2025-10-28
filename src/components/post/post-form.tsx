@@ -9,6 +9,12 @@ import { Button } from "../ui/button"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useTransition } from "react"
+import { createPost } from "@/actions/post-actions"
+import { log } from "console"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+
+
 
 const postSchema = z.object({
     
@@ -17,6 +23,21 @@ const postSchema = z.object({
     content: z.string().min(10, "Description must be at least 2 charaters long")
 })
 
+
+interface PostFormProps{
+    isEditing?:boolean;
+    post?:{
+        id:number
+        title:string;
+        description:string;
+        content:string;
+        slug:string;
+    }
+    
+}
+
+
+
 type PostFormValue = z.infer<typeof postSchema>
 
   
@@ -24,19 +45,48 @@ type PostFormValue = z.infer<typeof postSchema>
 
 
 
-function PostForm() {
+function PostForm({isEditing,post}:PostFormProps) {
+     const router = useRouter()
+
     const {register,handleSubmit,formState:{errors}} = useForm<PostFormValue>({
         resolver:zodResolver(postSchema),
-        defaultValues:{
-            title:'',
-            description:'',
-            content:''
+        defaultValues:isEditing && post ?{
+            title:post.title,
+            description:post.description,
+            content:post.content
+
+        }:{
+            title:"",
+            description:"",
+            content:""
         }
     })
 
     const onFormSubmit = async(data:PostFormValue)=>
     {
-        console.log(data);
+        startTransition(async()=>{
+            try{
+                const formData = new FormData()
+                formData.append('title',data.title)
+                formData.append('description',data.description)
+                formData.append('content',data.content)
+                
+                let res;
+
+                res = await createPost(formData)
+                console.log(res,"res");
+                
+                if(res.success){
+                    toast("post created successfully")
+                    router.refresh()
+                    router.push('/')
+                }
+
+            }catch(e){
+                 console.error("fail to create the post ",e);
+                 toast("fail to create the post ");
+            }
+        })
     }
 
 const [isPending,startTransition] = useTransition()
@@ -46,7 +96,7 @@ const [isPending,startTransition] = useTransition()
             <Label htmlFor="title" >title</Label>
             <input id="title"
             placeholder="Enter post title"
-            className="input-style" 
+            className="w-full rounded-md border border-input bg-background text-foreground px-3 py-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2" 
             {...register('title')}
             disabled={isPending}
             />
@@ -83,14 +133,14 @@ const [isPending,startTransition] = useTransition()
                 errors?.content && (
                      <p className="text-sm text-red-700" > {errors.content.message}</p>
                 )
-             }
+              }
 
         </div>
         <Button className="mt-5 w-full" 
         type="submit"  disabled={isPending}
         
         >
-              {isPending ? "Saving Post...":"Create Post"}
+              {isPending ? "Saving Post...":isEditing ? "Update Post": "Create Post"}
         </Button>
     </form>
     )
