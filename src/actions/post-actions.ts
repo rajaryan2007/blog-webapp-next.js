@@ -132,9 +132,67 @@ export async function updatePost(postId:number,formData:FormData){
     await db.update(posts).set({
       title,description,content,slug,updatedAt:new Date()
     }).where(eq(posts.id,postId))
+    
+    return {
+      success :true,
+      message:"Post edited successfully",
+      slug
+    }
 
-
+   
   }catch(e){
      log(e)
+     return {
+      success:false,
+      message:"Failed to create new Post"
+    };
+  }
+}
+
+export async function deletePost(postId:number){
+  try {
+     const session = await auth.api.getSession({
+      headers: await headers()
+     })
+     
+     if(!session || !session.user){
+      return {
+        success:false,
+        message:"You must logged in to edit a post!"
+      }
+     }
+
+     const postToDelete = await db.query.posts.findFirst({
+      where: eq(posts.id,postId)
+     })
+
+     if(!postToDelete){
+      return{
+        success:"Post not found"
+      }
+     }
+     if(postToDelete?.authorId !== session.user.id){
+      return {
+        success:false,
+        message:"You can only delete your own posts!"
+      }
+     }
+
+     await db.delete(posts).where(eq(posts.id,postId))
+    
+      revalidatePath("/");
+      revalidatePath("/profile");
+
+      return {
+        success:true,
+        message:'post deleted successfully'
+      }
+
+  } catch (error) {
+    log(error)
+    return {
+      success:false,
+      messsage:"Failed to create new post",
+    }
   }
 }

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/avatar"
 import { Button } from "../ui/button"
 import { User } from "better-auth"
-import { LogOut, PenSquare, UserIcon } from "lucide-react"
+import { LogOut, PenSquare, UserIcon,HomeIcon } from "lucide-react"
 import { signOut } from "@/lib/auth-client"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -56,8 +56,7 @@ function UserMenu({ user }: UserMenuProps) {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-8 rounded-full">
           <Avatar className="h-8 w-8">
-            {/* If you ever add image later */}
-            {/* <AvatarImage src={user.image || ""} alt={user.name} /> */}
+           
             <AvatarFallback>{getInitial(user?.name)}</AvatarFallback>
           </Avatar>
         </Button>
@@ -82,6 +81,14 @@ function UserMenu({ user }: UserMenuProps) {
           <Link href="/profile" className="flex items-center">
             <UserIcon className="mr-2 h-4 w-4" />
             <span>Profile</span>
+          </Link>
+        </DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
+          <Link href={'/'} className="flex items-center">
+              <HomeIcon className="mr-2 h-4 w-4" />
+                <span>Home</span>
+              
           </Link>
         </DropdownMenuItem>
 
